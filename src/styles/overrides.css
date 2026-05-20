@@ -7,16 +7,20 @@
 html, body, #root { min-height: 100%; height: auto; margin: 0; }
 
 /* The captured Svelte chrome (.brand-dashboard > .dashboard-body) is locked to
-   100vh with overflow: hidden — clips the wrap-up tab. Relax it whenever
-   our React wrap-up panel is rendered inside, and pin the sidebar so it
-   stays visible while the wrap-up content scrolls. */
+   100vh with overflow: hidden — clips any tall content we render inside.
+   Relax it whenever the wrap-up panel OR the create-campaign brief-review
+   step OR the creator-matching step is rendered. Pin the sidebar so it
+   stays visible while the inner content scrolls. */
 .brand-dashboard:has(.wu),
-.brand-dashboard:has(.wu) .dashboard-body {
+.brand-dashboard:has(.wu) .dashboard-body,
+.brand-dashboard:has(.draft-review-root),
+.brand-dashboard:has(.draft-review-root) .dashboard-body {
   height: auto !important;
   overflow: visible !important;
   min-height: 100%;
 }
-.brand-dashboard:has(.wu) aside.sidebar {
+.brand-dashboard:has(.wu) aside.sidebar,
+.brand-dashboard:has(.draft-review-root) aside.sidebar {
   position: sticky !important;
   top: 0 !important;
   align-self: start !important;
@@ -24,9 +28,23 @@ html, body, #root { min-height: 100%; height: auto; margin: 0; }
   max-height: 100vh !important;
   overflow-y: auto !important;
 }
-.brand-dashboard:has(.wu) aside.sidebar .sidebar-shell {
+.brand-dashboard:has(.wu) aside.sidebar .sidebar-shell,
+.brand-dashboard:has(.draft-review-root) aside.sidebar .sidebar-shell {
   height: 100vh !important;
   max-height: 100vh !important;
+}
+
+/* Inside the brief-review page itself the captured Svelte CSS also sets
+   .workspace-content / .workflow-page / .workspace-content-shell etc to
+   100% height with overflow:hidden|auto — that double-lock prevents
+   .draft-review-root (3000+ px tall) from being visible. Relax them. */
+.brand-dashboard:has(.draft-review-root) .workspace-content,
+.brand-dashboard:has(.draft-review-root) .workspace-content-shell,
+.brand-dashboard:has(.draft-review-root) .workflow-page,
+.brand-dashboard:has(.draft-review-root) .workspace-grid {
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
 }
 body {
   font-family: -apple-system, "system-ui", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
