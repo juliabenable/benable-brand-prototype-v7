@@ -1379,37 +1379,80 @@
 }
 
 /* ============================================================
-   v6 — Wrap-up tab in the captured tab bar (injected button).
-   Styled as a coral-gradient pill — visually distinct from the
-   underlined Dashboard/Content tabs so the brand sees this as
-   "here's the new thing to do," not just another tab.
+   v7 — Wrap-up tab reverts to a regular underlined tab. The primary
+   wrap-up entry is the .wu-banner injected below the tab bar; the
+   tab itself just provides navigation back once the brand's clicked
+   in. The old vertical-stripe ::before accent is removed.
    ============================================================ */
-.workflow-dashboard-tab.wu-tab,
-.workflow-dashboard-tab.wu-tab:hover,
-.workflow-dashboard-tab.wu-tab:focus,
-.workflow-dashboard-tab.wu-tab.active {
-  background: linear-gradient(135deg, #ff8aa0 0%, #ff6b85 100%) !important;
-  color: #fff !important;
-  border: 0 !important;
-  border-radius: 999px !important;
-  padding: 7px 16px !important;
-  margin-left: 14px;
-  font-size: 13px !important;
-  font-weight: 600 !important;
-  min-height: 32px;
-  align-self: center;
-  transition: transform .1s ease, filter .14s ease;
-}
 .workflow-dashboard-tab.wu-tab::before {
-  /* Drop the old vertical stripe — the pill is the visual now. */
   display: none !important;
 }
-.workflow-dashboard-tab.wu-tab:hover {
-  transform: translateY(-1px);
-  filter: brightness(1.04);
+
+/* ============================================================
+   v7 — Wrap-up banner — clones the brand portal's "Some new activity
+   to look at" pattern from the Design Labs Figma (node 9298-39113).
+   Lavender wash, purple bell icon, inline links with dot separators.
+   Injected into the captured workflow page just below the tab bar.
+   ============================================================ */
+.wu-banner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 20px;
+  border-radius: 16px;
+  background: #f5f3fc;
+  color: #5a5a5a;
+  font-size: 15px;
+  line-height: 1.4;
+  margin: 18px 0 4px;
+  flex-wrap: wrap;
+  transition: background .14s ease;
 }
-.workflow-dashboard-tab.wu-tab:active {
-  transform: translateY(0);
+.wu-banner:hover { background: #efeafa; }
+.wu-banner__icon {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center; justify-content: center;
+  background: rgba(122, 92, 250, 0.16);
+  color: #7a5cfa;
+  font-size: 16px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.wu-banner__copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.wu-banner__dot {
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.45;
+  flex-shrink: 0;
+}
+.wu-banner__lede {
+  color: #5a5a5a;
+}
+.wu-banner__link {
+  color: #7a5cfa;
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 2px;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  font-family: inherit;
+  font-size: inherit;
+  cursor: pointer;
+}
+.wu-banner__link:hover { color: #5d3fd3; text-decoration-thickness: 2px; }
+@media (max-width: 720px) {
+  .wu-banner { padding: 12px 16px; font-size: 14px; }
+  .wu-banner__icon { width: 32px; height: 32px; font-size: 14px; }
 }
 
 /* ============================================================

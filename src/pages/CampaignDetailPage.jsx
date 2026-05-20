@@ -16,6 +16,7 @@ import {
   isWrapUpVisible,
   getCampaignState,
   setCampaignClosed,
+  getPostcard,
 } from '../utils/postcardStorage.js';
 
 const BRAND_NAME = 'Pikora';
@@ -75,12 +76,44 @@ export default function CampaignDetailPage() {
       bar.querySelector('[data-tab="Wrapup"]')?.remove();
     }
 
+    // Inject the Wrap-up banner just below the tab bar on Dashboard/Content
+    // tabs (it's the primary entry point — replaces the old coral pill).
+    root.querySelector('.wu-banner')?.remove();
+    if (wrapVisible && (tab === 'Dashboard' || tab === 'Content') && bar) {
+      const unthankedCount = creatorsWithPosts.filter(
+        (c) => !getPostcard(campaignId, c.creator.handle)
+      ).length;
+      const thankLink = unthankedCount > 0
+        ? `<span class="wu-banner__dot"></span>
+           <button type="button" class="wu-banner__link" data-banner-action="thank">${unthankedCount} creator${unthankedCount === 1 ? '' : 's'} to thank</button>`
+        : '';
+      const banner = document.createElement('div');
+      banner.className = 'wu-banner';
+      banner.innerHTML = `
+        <span class="wu-banner__icon" aria-hidden="true">★</span>
+        <span class="wu-banner__copy">
+          <span class="wu-banner__lede">Your campaign is wrapped</span>
+          <span class="wu-banner__dot"></span>
+          <button type="button" class="wu-banner__link" data-banner-action="recap">See your recap</button>
+          ${thankLink}
+          <span class="wu-banner__dot"></span>
+          <button type="button" class="wu-banner__link" data-banner-action="paid">Pick paid options</button>
+        </span>
+      `;
+      const tabRow = bar.parentElement;
+      if (tabRow && tabRow.parentElement) {
+        tabRow.parentElement.insertBefore(banner, tabRow.nextSibling);
+      } else {
+        bar.parentNode.insertBefore(banner, bar.nextSibling);
+      }
+    }
+
     if (tab === 'Content') {
       root.querySelectorAll('.content-post-card').forEach((card) => decorateCard(card, campaignId));
     } else if (tab === 'Dashboard') {
       root.querySelectorAll('.creator-management-table tbody tr').forEach((tr) => decorateDashboardRow(tr, campaignId));
     }
-  }, [tab, html, campaignId, decorTick, popupTarget, wrapVisible]);
+  }, [tab, html, campaignId, decorTick, popupTarget, wrapVisible, creatorsWithPosts]);
 
   // ----- Click delegation -----
   useEffect(() => {
@@ -100,6 +133,13 @@ export default function CampaignDetailPage() {
       if (card) {
         e.preventDefault(); e.stopPropagation();
         openThanksFromCard(card);
+        return;
+      }
+      // Wrap-up banner — any link in it switches to the Wrap-up tab.
+      const bannerLink = e.target.closest('.wu-banner, .wu-banner__link');
+      if (bannerLink) {
+        e.preventDefault(); e.stopPropagation();
+        setTab('Wrapup');
         return;
       }
       // Captured "View" button (renamed from "Preview") on a Dashboard row.
