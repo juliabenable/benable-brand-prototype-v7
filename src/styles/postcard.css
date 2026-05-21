@@ -304,58 +304,72 @@
   line-height: 1.15;
   padding: 0 6px;
 }
-.pc-polaroid__signoff-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
+.pc-polaroid__signoff {
+  font-family: 'Caveat', 'Bradley Hand', cursive, system-ui;
+  font-size: 16px;
+  color: #888;
+  text-align: center;
   margin-top: 8px;
   padding: 0 6px;
 }
-.pc-polaroid__sig-avatar {
-  position: relative;
-  width: 30px; height: 30px;
-  border-radius: 50%;
-  background: #fff5ef center/cover no-repeat;
-  border: 2px solid #fff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(0, 0, 0, 0.05);
-  flex-shrink: 0;
+
+/* Scalloped sticker badge — sits in the bottom-right corner of the
+   polaroid (anchored to .pc which is position:relative). 12-petal
+   white flower SVG behind a perfectly circular avatar photo. */
+.pc-polaroid__sticker {
+  position: absolute;
+  right: -10px;
+  bottom: -14px;
+  width: 84px;
+  height: 84px;
   padding: 0;
+  border: 0;
+  background: transparent;
+  transform: rotate(-8deg);
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.18)) drop-shadow(0 1px 2px rgba(0, 0, 0, 0.12));
   display: inline-block;
 }
-.pc-polaroid__sig-avatar--editable {
-  background-clip: padding-box;
+.pc-polaroid__sticker--editable {
   cursor: pointer;
-  transition: transform .12s ease, box-shadow .14s ease;
+  transition: transform .18s ease;
 }
-.pc-polaroid__sig-avatar--editable:hover {
-  transform: scale(1.08);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.22), 0 0 0 2px rgba(122, 92, 250, 0.4);
+.pc-polaroid__sticker--editable:hover {
+  transform: rotate(-4deg) scale(1.06);
 }
-.pc-polaroid__sig-avatar-edit {
+.pc-polaroid__sticker-bg {
   position: absolute;
-  right: -4px; bottom: -4px;
-  width: 16px; height: 16px;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+}
+.pc-polaroid__sticker-photo {
+  position: absolute;
+  inset: 13px;
+  border-radius: 50%;
+  background: #fff5ef center/cover no-repeat;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+  display: block;
+}
+.pc-polaroid__sticker-edit {
+  position: absolute;
+  right: 6px; bottom: 6px;
+  width: 20px; height: 20px;
   border-radius: 50%;
   background: #7a5cfa;
   color: #fff;
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 700;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   opacity: 0;
   transition: opacity .14s ease;
-  border: 1.5px solid #fff;
+  border: 2px solid #fff;
+  z-index: 1;
 }
-.pc-polaroid__sig-avatar--editable:hover .pc-polaroid__sig-avatar-edit { opacity: 1; }
-
-.pc-polaroid__signoff {
-  font-family: 'Caveat', 'Bradley Hand', cursive, system-ui;
-  font-size: 16px;
-  color: #888;
-  text-align: center;
-}
+.pc-polaroid__sticker--editable:hover .pc-polaroid__sticker-edit { opacity: 1; }
 
 /* Vintage × Pastel */
 .pc-vintage {
@@ -1452,9 +1466,10 @@
   color: #5a5a5a;
   font-size: 15px;
   line-height: 1.4;
-  /* Banner sits in the gap between the tab bar and the white .stage-top-card
-     panel, OUTSIDE the card chrome — balanced margin top + bottom. */
-  margin: 16px 0 16px;
+  /* Banner sits INSIDE the .stage-top-card panel, between the section
+     header (Dashboard) or filter pills (Content) and the table/grid
+     below — tight margin top, comfortable margin to what's below. */
+  margin: 4px 0 16px;
   flex-wrap: wrap;
   transition: background .14s ease;
 }

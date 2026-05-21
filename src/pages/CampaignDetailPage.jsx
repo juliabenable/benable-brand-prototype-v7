@@ -100,19 +100,24 @@ export default function CampaignDetailPage() {
           <span class="wu-banner__cta-arrow" aria-hidden="true">→</span>
         </button>
       `;
-      // Place the banner ABOVE the white content card on the current
-      // tab — outside the card chrome, between the tab bar and the
-      // body content. .stage-top-card is the wrapping element on both
-      // Dashboard (.creator-tracking-panel) and Content
-      // (.content-dashboard-panel). Falls back to right below the tab
-      // bar if the wrapper isn't found.
-      const anchor = root.querySelector('.stage-top-card');
-      if (anchor && anchor.parentNode) {
-        anchor.parentNode.insertBefore(banner, anchor);
+      // Place the banner INSIDE the .stage-top-card white panel, in the
+      // gap between the section header (Dashboard) or filter pills
+      // (Content) and the actual table/grid below.
+      //
+      // Dashboard: between .panel-header-row and .creator-management-table-card
+      // Content:   between .content-platform-filters and .content-post-grid
+      //
+      // Falls back to inserting before .stage-top-card (old placement)
+      // if the inner anchors aren't found.
+      const innerAnchor = tab === 'Dashboard'
+        ? root.querySelector('.creator-management-table-card')
+        : root.querySelector('.content-post-grid');
+      if (innerAnchor && innerAnchor.parentNode) {
+        innerAnchor.parentNode.insertBefore(banner, innerAnchor);
       } else {
-        const tabRow = bar.parentElement;
-        if (tabRow && tabRow.parentElement) {
-          tabRow.parentElement.insertBefore(banner, tabRow.nextSibling);
+        const card = root.querySelector('.stage-top-card');
+        if (card && card.parentNode) {
+          card.parentNode.insertBefore(banner, card);
         } else {
           bar.parentNode.insertBefore(banner, bar.nextSibling);
         }

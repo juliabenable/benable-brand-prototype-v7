@@ -22,30 +22,61 @@ export function PolaroidPostcard({
         )}
       </div>
       <div className="pc-polaroid__caption">{message || 'we love what you made!'}</div>
-      <div className="pc-polaroid__signoff-row">
-        {signerAvatar !== undefined && (
-          onSignerAvatarClick ? (
-            <button
-              type="button"
-              className="pc-polaroid__sig-avatar pc-polaroid__sig-avatar--editable"
-              onClick={(e) => { e.stopPropagation(); onSignerAvatarClick(); }}
-              aria-label="Change signer photo"
-              title="Click to change photo"
-              style={signerAvatar ? { backgroundImage: `url(${signerAvatar})` } : undefined}
-            >
-              <span className="pc-polaroid__sig-avatar-edit" aria-hidden="true">✎</span>
-            </button>
-          ) : (
+      <div className="pc-polaroid__signoff">{signoff || `— ${brandName || ''}`}</div>
+      {signerAvatar !== undefined && (
+        onSignerAvatarClick ? (
+          <button
+            type="button"
+            className="pc-polaroid__sticker pc-polaroid__sticker--editable"
+            onClick={(e) => { e.stopPropagation(); onSignerAvatarClick(); }}
+            aria-label="Change signer photo"
+            title="Click to change photo"
+          >
+            <ScallopedSticker />
             <span
-              className="pc-polaroid__sig-avatar"
+              className="pc-polaroid__sticker-photo"
               style={signerAvatar ? { backgroundImage: `url(${signerAvatar})` } : undefined}
-              aria-hidden="true"
             />
-          )
-        )}
-        <div className="pc-polaroid__signoff">{signoff || `— ${brandName || ''}`}</div>
-      </div>
+            <span className="pc-polaroid__sticker-edit" aria-hidden="true">✎</span>
+          </button>
+        ) : (
+          <span className="pc-polaroid__sticker" aria-hidden="true">
+            <ScallopedSticker />
+            <span
+              className="pc-polaroid__sticker-photo"
+              style={signerAvatar ? { backgroundImage: `url(${signerAvatar})` } : undefined}
+            />
+          </span>
+        )
+      )}
     </div>
+  );
+}
+
+/* Scalloped "sticker" background — 12-petal flower around a center disc. */
+function ScallopedSticker() {
+  return (
+    <svg
+      className="pc-polaroid__sticker-bg"
+      viewBox="0 0 100 100"
+      aria-hidden="true"
+    >
+      <g fill="#ffffff">
+        <circle cx="50" cy="50" r="40" />
+        <circle cx="50" cy="6"  r="10" />
+        <circle cx="72" cy="12" r="10" />
+        <circle cx="88" cy="28" r="10" />
+        <circle cx="94" cy="50" r="10" />
+        <circle cx="88" cy="72" r="10" />
+        <circle cx="72" cy="88" r="10" />
+        <circle cx="50" cy="94" r="10" />
+        <circle cx="28" cy="88" r="10" />
+        <circle cx="12" cy="72" r="10" />
+        <circle cx="6"  cy="50" r="10" />
+        <circle cx="12" cy="28" r="10" />
+        <circle cx="28" cy="12" r="10" />
+      </g>
+    </svg>
   );
 }
 
