@@ -479,13 +479,13 @@ function StepReCollab({ firstName, value, onPick, declineNote, onDeclineNoteChan
               {showDeclineNote && (
                 <div className="stp-rc-note" onClick={(e) => e.stopPropagation()}>
                   <label className="stp-rc-note__label">
-                    <span className="stp-rc-note__label-text">What didn't work?</span>
-                    <em>Just for the Benable team — these notes help us pick better creators for you next time.</em>
+                    <span className="stp-rc-note__label-text">Help us match better next time</span>
+                    <em>Notes are private — only the Benable team sees this, and we use them to sharpen the creators we suggest for your next campaign.</em>
                   </label>
                   <textarea
                     className="stp-rc-note__field"
-                    rows={3}
-                    placeholder="Tone, timing, brief alignment, vibe — anything that didn't quite land."
+                    rows={2}
+                    placeholder="Tone, timing, brief alignment, vibe — anything we should know."
                     value={declineNote || ''}
                     onChange={(e) => onDeclineNoteChange(e.target.value)}
                     onClick={(e) => e.stopPropagation()}
