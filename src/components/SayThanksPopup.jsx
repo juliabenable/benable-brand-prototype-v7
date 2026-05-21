@@ -36,13 +36,17 @@ export default function SayThanksPopup({
   const [reCollab, setReCollabLocal] = useState(existing.reCollab);
   const post = posts[idx] || posts[0] || {};
 
-  // pre-drafted messages + editable signature
+  // pre-drafted messages + editable signature. Defaults come from the
+  // campaign brief — Ana (founder of Pikora) and her photo from the
+  // brief's "Note from the Brand" card. Both editable in step 2.
   const draftPublic = `${firstName} was a dream to work with — top-level content.`;
   const draftPrivate = `OMG ${firstName} you killed it — your captions had me laughing out loud. Thank you 🤍`;
-  const defaultSignature = `Christine, ${brandName}`;
+  const defaultSignature = `Ana, ${brandName}`;
+  const defaultAvatar = 'https://cdn.voyagela.com/wp-content/uploads/2025/06/c-1749328220467-1749328220095_ana_lander_ana_byemferreti1.jpg';
   const [publicMessage, setPublicMessage] = useState(existing.postcard?.publicMessage ?? draftPublic);
   const [privateMessage, setPrivateMessage] = useState(existing.postcard?.privateMessage ?? draftPrivate);
   const [signature, setSignature] = useState(existing.postcard?.signature ?? defaultSignature);
+  const [signerAvatar, setSignerAvatar] = useState(existing.postcard?.signerAvatar ?? defaultAvatar);
 
   // Escape + body lock
   useEffect(() => {
@@ -57,6 +61,25 @@ export default function SayThanksPopup({
   }, []);
   const onBackdrop = (e) => { if (e.target === e.currentTarget && !sending) onClose(); };
 
+  // File picker for swapping the signer's photo on the postcard.
+  // Mirrors the Edit pencil pattern used in the brief — click the avatar,
+  // pick an image, it shows up immediately on the polaroid + gets saved
+  // with the postcard record.
+  const pickSignerPhoto = () => {
+    if (sending) return;
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => setSignerAvatar(reader.result);
+      reader.readAsDataURL(file);
+    };
+    input.click();
+  };
+
   const send = () => {
     setSending(true);
     setTimeout(() => {
@@ -65,6 +88,7 @@ export default function SayThanksPopup({
         publicMessage,
         privateMessage,
         signature,
+        signerAvatar,
         sentAt: new Date().toISOString(),
       };
       savePostcard(campaignId, creator.handle, record);
@@ -118,6 +142,8 @@ export default function SayThanksPopup({
               setPrivateMessage={setPrivateMessage}
               signature={signature}
               setSignature={setSignature}
+              signerAvatar={signerAvatar}
+              onPickSignerAvatar={pickSignerPhoto}
               onBack={() => setStep(1)}
               onSkip={() => setStep(3)}
               onSend={send}
@@ -149,6 +175,7 @@ export default function SayThanksPopup({
                         brandName={brandName}
                         message={publicMessage}
                         signoff={`— ${signature}`}
+                        signerAvatar={signerAvatar}
                       />
                     </div>
                   </div>
@@ -202,12 +229,44 @@ function postRatio(platform) {
 function StepView({ posts, idx, setIdx, post, creator, onNext }) {
   const single = posts.length === 1;
   const ratio = postRatio(post.platform);
+  // Image arrows are reserved for *within-post* navigation (a single IG
+  // post can be a multi-image carousel). For the demo, our posts are
+  // single-image, so the on-image arrows stay hidden — post-list
+  // navigation lives in a dedicated strip above the card.
+  const postImages = post.images && post.images.length > 1 ? post.images : [];
+  const hasImageCarousel = postImages.length > 1;
   return (
     <div className="stp-step stp-step--view">
       <div className="stp-step__hd">
         <h3>Take a look at what {creator.name.split(' ')[0]} made</h3>
         <p>Browse {posts.length === 1 ? 'the post' : `all ${posts.length} posts`} before you send a thank-you.</p>
       </div>
+
+      {/* Post-list navigation — clearly labelled, sits above the card so
+          it's never confused with image-carousel arrows. */}
+      {!single && (
+        <div className="stp-view-nav" role="group" aria-label="Post navigation">
+          <button
+            type="button"
+            className="stp-view-nav__arrow"
+            aria-label="Previous post"
+            onClick={() => setIdx((i) => (i - 1 + posts.length) % posts.length)}
+          >‹</button>
+          <div className="stp-view-nav__counter">
+            <span className="stp-view-nav__counter-label">Post</span>
+            <b>{idx + 1}</b>
+            <span>of</span>
+            <b>{posts.length}</b>
+          </div>
+          <button
+            type="button"
+            className="stp-view-nav__arrow"
+            aria-label="Next post"
+            onClick={() => setIdx((i) => (i + 1) % posts.length)}
+          >›</button>
+        </div>
+      )}
+
       <div className="stp-view-stage">
         <article className="stp-view-card">
           <div className="stp-view-card__media" style={{ aspectRatio: ratio }}>
@@ -216,14 +275,17 @@ function StepView({ posts, idx, setIdx, post, creator, onNext }) {
             ) : (
               <div className="stp-view-card__img stp-view-card__img--placeholder" />
             )}
-            {!single && (
+            {/* Only render image arrows when this post is a multi-image
+                carousel — otherwise users would have two competing nav
+                models on the same view. */}
+            {hasImageCarousel && (
               <>
                 <div className="stp-view-arrows">
-                  <button aria-label="Previous post" onClick={() => setIdx((i) => (i - 1 + posts.length) % posts.length)}>‹</button>
-                  <button aria-label="Next post" onClick={() => setIdx((i) => (i + 1) % posts.length)}>›</button>
+                  <button aria-label="Previous image">‹</button>
+                  <button aria-label="Next image">›</button>
                 </div>
                 <div className="stp-view-dots">
-                  {posts.map((_, i) => <span key={i} className={i === idx ? 'on' : ''} />)}
+                  {postImages.map((_, i) => <span key={i} className={i === 0 ? 'on' : ''} />)}
                 </div>
               </>
             )}
@@ -242,9 +304,6 @@ function StepView({ posts, idx, setIdx, post, creator, onNext }) {
               <p className="stp-view-card__caption">
                 <b>{creator.handle.replace(/^@/, '')}</b> {post.caption || ''}
               </p>
-              {posts.length > 1 && (
-                <div className="stp-view-card__count">{idx + 1} of {posts.length}</div>
-              )}
             </div>
             {post.postUrl && (
               <footer className="stp-view-card__side-foot">
@@ -270,10 +329,12 @@ function StepThank({
   firstName, brandName, post,
   postcardSent, publicMessage, setPublicMessage, privateMessage, setPrivateMessage,
   signature, setSignature,
+  signerAvatar, onPickSignerAvatar,
   onBack, onSkip, onSend, sending,
 }) {
   const viewOnly = !!postcardSent;
   const sigUsed = postcardSent?.signature || signature;
+  const avatarUsed = postcardSent?.signerAvatar ?? signerAvatar;
   return (
     <div className="stp-step stp-step--thank">
       <div className="stp-step__hd">
@@ -288,6 +349,8 @@ function StepThank({
             brandName={brandName}
             message={publicMessage}
             signoff={sigUsed ? `— ${sigUsed}` : undefined}
+            signerAvatar={avatarUsed}
+            onSignerAvatarClick={viewOnly ? undefined : onPickSignerAvatar}
           />
         </div>
         <div className="stp-thank-fields">

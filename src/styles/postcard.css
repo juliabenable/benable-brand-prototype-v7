@@ -304,12 +304,57 @@
   line-height: 1.15;
   padding: 0 6px;
 }
+.pc-polaroid__signoff-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 0 6px;
+}
+.pc-polaroid__sig-avatar {
+  position: relative;
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: #fff5ef center/cover no-repeat;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  flex-shrink: 0;
+  padding: 0;
+  display: inline-block;
+}
+.pc-polaroid__sig-avatar--editable {
+  background-clip: padding-box;
+  cursor: pointer;
+  transition: transform .12s ease, box-shadow .14s ease;
+}
+.pc-polaroid__sig-avatar--editable:hover {
+  transform: scale(1.08);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.22), 0 0 0 2px rgba(122, 92, 250, 0.4);
+}
+.pc-polaroid__sig-avatar-edit {
+  position: absolute;
+  right: -4px; bottom: -4px;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: #7a5cfa;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity .14s ease;
+  border: 1.5px solid #fff;
+}
+.pc-polaroid__sig-avatar--editable:hover .pc-polaroid__sig-avatar-edit { opacity: 1; }
+
 .pc-polaroid__signoff {
   font-family: 'Caveat', 'Bradley Hand', cursive, system-ui;
   font-size: 16px;
   color: #888;
   text-align: center;
-  margin-top: 6px;
 }
 
 /* Vintage × Pastel */
@@ -1711,9 +1756,63 @@
 .stp-link:hover:not(:disabled) { color: #1a1a1a; text-decoration: underline; }
 .stp-link:disabled { opacity: .5; cursor: not-allowed; }
 
+/* ---------- Step 1: View — Post-list navigation strip (sits above
+   the card, labelled "Post N of M" so it's never confused with the
+   image-carousel arrows that live ON the photo for multi-image posts). */
+.stp-view-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: center;
+  margin: 0 auto 14px;
+  background: #f4f3f1;
+  border: 1px solid #ececea;
+  border-radius: 999px;
+  padding: 4px;
+}
+.stp-view-nav__arrow {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  border: 0;
+  background: #fff;
+  color: #1a1a1a;
+  font-size: 16px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+  transition: transform .08s ease, background .14s ease;
+}
+.stp-view-nav__arrow:hover { transform: translateY(-1px); background: #fafaf8; }
+.stp-view-nav__arrow:active { transform: translateY(0); }
+.stp-view-nav__counter {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  padding: 0 10px;
+  font-size: 13px;
+  color: #717171;
+  font-weight: 500;
+  line-height: 1;
+}
+.stp-view-nav__counter b { color: #1a1a1a; font-weight: 700; font-size: 14px; }
+.stp-view-nav__counter-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #888;
+  margin-right: 2px;
+}
+
 /* ---------- Step 1: View — Instagram-DESKTOP card (one unified card,
    image flush to the caption sidebar, image sized to its native ratio
    so there's no letterbox padding). ---------- */
+.stp-step--view {
+  display: flex;
+  flex-direction: column;
+}
 .stp-step--view .stp-view-stage {
   flex: 1;
   display: flex;

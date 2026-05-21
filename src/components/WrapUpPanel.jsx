@@ -342,6 +342,7 @@ function ThankYouWall({ thanked, brandName }) {
                   brandName={brandName}
                   message={c.state.postcard.publicMessage}
                   signoff={c.state.postcard.signature ? `— ${c.state.postcard.signature}` : undefined}
+                  signerAvatar={c.state.postcard.signerAvatar}
                 />
               </div>
               <div className="wu-wall__caption">

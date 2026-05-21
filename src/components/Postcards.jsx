@@ -6,7 +6,10 @@
  *          stamp + postmark + sparkle accents auto-filled.
  */
 
-export function PolaroidPostcard({ thumbnailUrl, platform, brandName, message, signoff }) {
+export function PolaroidPostcard({
+  thumbnailUrl, platform, brandName, message, signoff,
+  signerAvatar, onSignerAvatarClick,
+}) {
   return (
     <div className="pc pc-polaroid">
       <div className="pc-polaroid__tape" />
@@ -19,7 +22,29 @@ export function PolaroidPostcard({ thumbnailUrl, platform, brandName, message, s
         )}
       </div>
       <div className="pc-polaroid__caption">{message || 'we love what you made!'}</div>
-      <div className="pc-polaroid__signoff">{signoff || `— ${brandName || ''}`}</div>
+      <div className="pc-polaroid__signoff-row">
+        {signerAvatar !== undefined && (
+          onSignerAvatarClick ? (
+            <button
+              type="button"
+              className="pc-polaroid__sig-avatar pc-polaroid__sig-avatar--editable"
+              onClick={(e) => { e.stopPropagation(); onSignerAvatarClick(); }}
+              aria-label="Change signer photo"
+              title="Click to change photo"
+              style={signerAvatar ? { backgroundImage: `url(${signerAvatar})` } : undefined}
+            >
+              <span className="pc-polaroid__sig-avatar-edit" aria-hidden="true">✎</span>
+            </button>
+          ) : (
+            <span
+              className="pc-polaroid__sig-avatar"
+              style={signerAvatar ? { backgroundImage: `url(${signerAvatar})` } : undefined}
+              aria-hidden="true"
+            />
+          )
+        )}
+        <div className="pc-polaroid__signoff">{signoff || `— ${brandName || ''}`}</div>
+      </div>
     </div>
   );
 }
