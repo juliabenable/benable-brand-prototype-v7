@@ -300,30 +300,24 @@ function StepView({ posts, idx, setIdx, post, creator, onNext }) {
         </article>
       </div>
 
-      {/* Post-list navigation — sits below the card. Lightweight,
-          chip-less: just two circle arrows and a "Post 1 / 2" counter.
-          The on-image arrows handle multi-image carousel posts when
-          present. */}
+      {/* Post-list navigation — segmented control under the card.
+          Reads as a single integrated switch instead of three separate
+          elements (left arrow + counter + right arrow). On-image arrows
+          handle multi-image carousel posts when present. */}
       {!single && (
-        <div className="stp-view-nav" role="group" aria-label="Post navigation">
-          <button
-            type="button"
-            className="stp-view-nav__arrow"
-            aria-label="Previous post"
-            onClick={() => setIdx((i) => (i - 1 + posts.length) % posts.length)}
-          >‹</button>
-          <div className="stp-view-nav__counter">
-            <span className="stp-view-nav__counter-label">Post</span>
-            <b>{idx + 1}</b>
-            <span className="stp-view-nav__counter-sep">/</span>
-            <b>{posts.length}</b>
-          </div>
-          <button
-            type="button"
-            className="stp-view-nav__arrow"
-            aria-label="Next post"
-            onClick={() => setIdx((i) => (i + 1) % posts.length)}
-          >›</button>
+        <div className="stp-view-tabs" role="tablist" aria-label="Post navigation">
+          {posts.map((_, i) => (
+            <button
+              key={i}
+              type="button"
+              role="tab"
+              aria-selected={i === idx}
+              className={`stp-view-tab ${i === idx ? 'on' : ''}`}
+              onClick={() => setIdx(i)}
+            >
+              Post {i + 1}
+            </button>
+          ))}
         </div>
       )}
 
