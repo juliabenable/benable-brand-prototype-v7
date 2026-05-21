@@ -622,7 +622,10 @@
    Demo-only escape hatch. Only renders when there are sent postcards. */
 .reset-thanks-fab {
   position: fixed;
-  bottom: 24px;
+  /* Stacked above the .demo-close-btn (which sits at bottom: 24px).
+     When close-btn isn't rendered the reset FAB just floats a bit higher,
+     which is fine — these are both demo affordances. */
+  bottom: 76px;
   right: 24px;
   z-index: 100;
   display: inline-flex;
@@ -1382,7 +1385,7 @@
    ============================================================ */
 .demo-close-btn {
   position: fixed;
-  top: 80px;
+  bottom: 24px;
   right: 24px;
   z-index: 90;
   display: inline-flex;
@@ -1756,7 +1759,7 @@
 .stp-link:hover:not(:disabled) { color: #1a1a1a; text-decoration: underline; }
 .stp-link:disabled { opacity: .5; cursor: not-allowed; }
 
-/* ---------- Step 1: View — Post-list navigation strip (sits above
+/* ---------- Step 1: View — Post-list navigation strip (sits BELOW
    the card, labelled "Post N of M" so it's never confused with the
    image-carousel arrows that live ON the photo for multi-image posts). */
 .stp-view-nav {
@@ -1764,7 +1767,7 @@
   align-items: center;
   gap: 8px;
   align-self: center;
-  margin: 0 auto 14px;
+  margin: 14px auto 4px;
   background: #f4f3f1;
   border: 1px solid #ececea;
   border-radius: 999px;

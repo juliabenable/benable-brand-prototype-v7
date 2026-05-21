@@ -251,31 +251,6 @@ function StepView({ posts, idx, setIdx, post, creator, onNext }) {
         <p>Browse {posts.length === 1 ? 'the post' : `all ${posts.length} posts`} before you send a thank-you.</p>
       </div>
 
-      {/* Post-list navigation — clearly labelled, sits above the card so
-          it's never confused with image-carousel arrows. */}
-      {!single && (
-        <div className="stp-view-nav" role="group" aria-label="Post navigation">
-          <button
-            type="button"
-            className="stp-view-nav__arrow"
-            aria-label="Previous post"
-            onClick={() => setIdx((i) => (i - 1 + posts.length) % posts.length)}
-          >‹</button>
-          <div className="stp-view-nav__counter">
-            <span className="stp-view-nav__counter-label">Post</span>
-            <b>{idx + 1}</b>
-            <span>of</span>
-            <b>{posts.length}</b>
-          </div>
-          <button
-            type="button"
-            className="stp-view-nav__arrow"
-            aria-label="Next post"
-            onClick={() => setIdx((i) => (i + 1) % posts.length)}
-          >›</button>
-        </div>
-      )}
-
       <div className="stp-view-stage">
         <article className="stp-view-card">
           <div className="stp-view-card__media" style={{ aspectRatio: ratio }}>
@@ -324,6 +299,32 @@ function StepView({ posts, idx, setIdx, post, creator, onNext }) {
           </aside>
         </article>
       </div>
+
+      {/* Post-list navigation — sits below the card, clearly labelled
+          "Post N of M" so it's never confused with the image-carousel
+          arrows that live ON the photo for multi-image posts. */}
+      {!single && (
+        <div className="stp-view-nav" role="group" aria-label="Post navigation">
+          <button
+            type="button"
+            className="stp-view-nav__arrow"
+            aria-label="Previous post"
+            onClick={() => setIdx((i) => (i - 1 + posts.length) % posts.length)}
+          >‹</button>
+          <div className="stp-view-nav__counter">
+            <span className="stp-view-nav__counter-label">Post</span>
+            <b>{idx + 1}</b>
+            <span>of</span>
+            <b>{posts.length}</b>
+          </div>
+          <button
+            type="button"
+            className="stp-view-nav__arrow"
+            aria-label="Next post"
+            onClick={() => setIdx((i) => (i + 1) % posts.length)}
+          >›</button>
+        </div>
+      )}
 
       <footer className="stp-foot">
         <span className="stp-foot-spacer" />

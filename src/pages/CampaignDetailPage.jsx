@@ -96,7 +96,7 @@ export default function CampaignDetailPage() {
           ${thankLink}
         </span>
         <button type="button" class="wu-banner__cta" data-banner-action="recap">
-          See your recap
+          See your campaign wrap up
           <span class="wu-banner__cta-arrow" aria-hidden="true">→</span>
         </button>
       `;
@@ -196,7 +196,9 @@ export default function CampaignDetailPage() {
   function closeCampaignForDemo() {
     setCampaignClosed(campaignId, true);
     setDecorTick((t) => t + 1);
-    setTab('Wrapup');
+    // Stay on the current tab — the banner appears below the tab bar so
+    // the user can see the wrap-up CTA without being yanked away. They
+    // click the banner button (or the injected Wrap-up tab) to navigate.
   }
   function reopenCampaignForDemo() {
     setCampaignClosed(campaignId, false);
