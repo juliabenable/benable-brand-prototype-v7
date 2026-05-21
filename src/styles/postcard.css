@@ -2187,6 +2187,64 @@
 .stp-rc-opt--favorite.on .stp-rc-emoji { background: #fdebc6; }
 .stp-rc-opt--favorite.on .stp-rc-mark { background: #c89422; border-color: #c89422; color: #fff; }
 
+/* Decline option expands into a "why didn't this work" note when
+   selected. Wrapper sits below the option button; the textarea is
+   only rendered when value === 'decline'. */
+.stp-rc-opt-wrap { display: flex; flex-direction: column; }
+.stp-rc-note {
+  margin-top: 8px;
+  background: #fdf6f4;
+  border: 1px solid #f4d6c6;
+  border-radius: 14px;
+  padding: 14px 16px;
+  animation: stp-rc-note-in .18s ease-out;
+}
+@keyframes stp-rc-note-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.stp-rc-note__label {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 8px;
+}
+.stp-rc-note__label-text {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1a1a1a;
+  letter-spacing: 0.01em;
+}
+.stp-rc-note__label em {
+  font-style: normal;
+  font-size: 12px;
+  font-weight: 500;
+  color: #717171;
+  line-height: 1.5;
+}
+.stp-rc-note__field {
+  width: 100%;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.55;
+  color: #1a1a1a;
+  background: #fff;
+  border: 1px solid #ececea;
+  border-radius: 10px;
+  padding: 12px 14px;
+  resize: vertical;
+  min-height: 80px;
+  outline: none;
+  transition: border-color .14s ease;
+}
+.stp-rc-note__field:focus {
+  border-color: #c47a6a;
+  box-shadow: 0 0 0 3px rgba(196, 122, 106, 0.16);
+}
+.stp-rc-note__field::placeholder {
+  color: #b1aca6;
+}
+
 /* ---------- Send animation overlay (stays inside the modal) ---------- */
 .stp-send-layer {
   position: absolute;

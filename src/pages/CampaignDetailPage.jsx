@@ -323,8 +323,9 @@ function decorateDashboardRow(tr, campaignId) {
   if (summary.thanked) chips.push('<span class="rel-chip rel-chip--thanked">♥ Thanked</span>');
   if (summary.paidRights > 0) chips.push(`<span class="rel-chip rel-chip--rights">⊛ Paid rights · ${summary.paidRights}</span>`);
   if (summary.reCollab === 'favorite') chips.push('<span class="rel-chip rel-chip--save">★ Favorite</span>');
-  else if (summary.reCollab === 'later') chips.push('<span class="rel-chip rel-chip--invite">＋ Work later</span>');
-  else if (summary.reCollab === 'decline') chips.push('<span class="rel-chip rel-chip--decline">✕ Not a fit</span>');
+  else if (summary.reCollab === 'later') chips.push('<span class="rel-chip rel-chip--invite">↻ Future pick</span>');
+  // No chip when the brand chose "Nah, one and done" — the dashboard
+  // stays clean for creators that aren't being kept in rotation.
   if (chips.length) {
     const noteCell = tr.querySelector('.creator-management-note-col');
     const host = noteCell || tr.querySelector('td:nth-child(3)') || tr.lastElementChild;

@@ -4,6 +4,8 @@ import {
   getCreatorState,
   savePostcard,
   setReCollab,
+  setReCollabNote,
+  getReCollabNote,
 } from '../utils/postcardStorage.js';
 
 const ANIM_DURATION_MS = 4600;
@@ -34,6 +36,7 @@ export default function SayThanksPopup({
   const [sending, setSending] = useState(false);     // overlay-on-modal animation
   const [postcard, setPostcard] = useState(existing.postcard);
   const [reCollab, setReCollabLocal] = useState(existing.reCollab);
+  const [declineNote, setDeclineNote] = useState(() => getReCollabNote(campaignId, creator.handle));
   const post = posts[idx] || posts[0] || {};
 
   // pre-drafted messages + editable signature. Defaults come from the
@@ -104,6 +107,10 @@ export default function SayThanksPopup({
     setReCollab(campaignId, creator.handle, value);
     onChanged && onChanged();
   };
+  const updateDeclineNote = (note) => {
+    setDeclineNote(note);
+    setReCollabNote(campaignId, creator.handle, note);
+  };
 
   const done = () => onClose();
 
@@ -156,6 +163,8 @@ export default function SayThanksPopup({
               firstName={firstName}
               value={reCollab}
               onPick={pickReCollab}
+              declineNote={declineNote}
+              onDeclineNoteChange={updateDeclineNote}
               onBack={() => setStep(2)}
               onDone={done}
             />
@@ -163,7 +172,7 @@ export default function SayThanksPopup({
 
           {/* Send animation overlays the modal body — modal stays visible */}
           {sending && (
-            <div className="stp-send-layer" aria-label="Sending postcard">
+            <div className="stp-send-layer" aria-label="Sending thank you">
               <div className="send-anim-stage">
                 <div className="send-anim__envelope">
                   <div className="send-anim__envelope-back" />
@@ -338,7 +347,7 @@ function StepThank({
   return (
     <div className="stp-step stp-step--thank">
       <div className="stp-step__hd">
-        <h3>Send a postcard to {firstName}</h3>
+        <h3>Send a thank you to {firstName}</h3>
         <p>Two notes in one — a public thank-you that lands on {firstName}'s testimonials, and a private message just for them.</p>
       </div>
       <div className="stp-thank-row">
@@ -357,7 +366,7 @@ function StepThank({
           {viewOnly ? (
             <div className="stp-sent">
               <div className="stp-sent-badge">✓ Sent</div>
-              <p>You sent {firstName} a postcard on{' '}
+              <p>You sent {firstName} a thank you on{' '}
                 {new Date(postcardSent.sentAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}.</p>
               {postcardSent.privateMessage && (
                 <div className="stp-private-recap">
@@ -369,7 +378,7 @@ function StepThank({
           ) : (
             <>
               <label className="stp-field">
-                <span className="stp-field-label">Public message <em>· shows on the postcard &amp; on {firstName}'s testimonials</em></span>
+                <span className="stp-field-label">Public message <em>· shows on the thank-you &amp; on {firstName}'s testimonials</em></span>
                 <textarea
                   rows={2}
                   maxLength={PUBLIC_MAX}
@@ -393,7 +402,7 @@ function StepThank({
                 <small>{privateMessage.length} / {PRIVATE_MAX}</small>
               </label>
               <label className="stp-field stp-field--plain stp-field--sig">
-                <span className="stp-field-label">Sign as <em>· shows under the postcard as your signature</em></span>
+                <span className="stp-field-label">Sign as <em>· shows under the thank-you as your signature</em></span>
                 <input
                   type="text"
                   value={signature}
@@ -416,7 +425,7 @@ function StepThank({
           <>
             <button className="stp-link" onClick={onSkip} disabled={sending}>Skip</button>
             <button className="stp-primary" onClick={onSend} disabled={!publicMessage.trim() || sending}>
-              {sending ? 'Sending…' : '♥ Send postcard'}
+              {sending ? 'Sending…' : '♥ Send thank you'}
             </button>
           </>
         )}
@@ -425,19 +434,20 @@ function StepThank({
   );
 }
 
-/* ---------- Step 3: Re-collab — friendlier copy + emoji ---------- */
+/* ---------- Step 3: Re-collab — friendlier copy + emoji.
+   Order is favorite → later → decline (most enthusiastic to least). */
 const RECOLLAB_OPTIONS = [
-  { id: 'decline',  emoji: '🙅',
-    label: 'Nah, one and done',
-    desc: "I'd rather not work with {first} again." },
-  { id: 'later',    emoji: '🤝',
-    label: 'Yes, periodically',
-    desc: "Loved {first}'s content — I'd like to be able to pick her for future campaigns." },
   { id: 'favorite', emoji: '⭐',
     label: 'Add to my favorites',
     desc: 'Absolutely amazing — please auto-invite {first} to every campaign.' },
+  { id: 'later',    emoji: '🤝',
+    label: 'Yes, periodically',
+    desc: "Loved {first}'s content — I'd like to be able to pick her for future campaigns." },
+  { id: 'decline',  emoji: '🙅',
+    label: 'Nah, one and done',
+    desc: "I'd rather not work with {first} again." },
 ];
-function StepReCollab({ firstName, value, onPick, onBack, onDone }) {
+function StepReCollab({ firstName, value, onPick, declineNote, onDeclineNoteChange, onBack, onDone }) {
   return (
     <div className="stp-step stp-step--recollab">
       <div className="stp-step__hd">
@@ -447,23 +457,41 @@ function StepReCollab({ firstName, value, onPick, onBack, onDone }) {
       <div className="stp-rc-options" role="radiogroup">
         {RECOLLAB_OPTIONS.map((opt) => {
           const on = value === opt.id;
+          const showDeclineNote = on && opt.id === 'decline';
           return (
-            <button
-              key={opt.id}
-              type="button"
-              className={`stp-rc-opt stp-rc-opt--${opt.id} ${on ? 'on' : ''}`}
-              aria-pressed={on}
-              role="radio"
-              aria-checked={on}
-              onClick={() => onPick(opt.id)}
-            >
-              <span className="stp-rc-emoji" aria-hidden="true">{opt.emoji}</span>
-              <span className="stp-rc-copy">
-                <b>{opt.label}</b>
-                <em>{opt.desc.replace('{first}', firstName)}</em>
-              </span>
-              <span className="stp-rc-mark" aria-hidden="true">{on ? '✓' : ''}</span>
-            </button>
+            <div key={opt.id} className={`stp-rc-opt-wrap ${on ? 'on' : ''}`}>
+              <button
+                type="button"
+                className={`stp-rc-opt stp-rc-opt--${opt.id} ${on ? 'on' : ''}`}
+                aria-pressed={on}
+                role="radio"
+                aria-checked={on}
+                onClick={() => onPick(opt.id)}
+              >
+                <span className="stp-rc-emoji" aria-hidden="true">{opt.emoji}</span>
+                <span className="stp-rc-copy">
+                  <b>{opt.label}</b>
+                  <em>{opt.desc.replace('{first}', firstName)}</em>
+                </span>
+                <span className="stp-rc-mark" aria-hidden="true">{on ? '✓' : ''}</span>
+              </button>
+              {showDeclineNote && (
+                <div className="stp-rc-note" onClick={(e) => e.stopPropagation()}>
+                  <label className="stp-rc-note__label">
+                    <span className="stp-rc-note__label-text">What didn't work?</span>
+                    <em>Just for the Benable team — these notes help us pick better creators for you next time.</em>
+                  </label>
+                  <textarea
+                    className="stp-rc-note__field"
+                    rows={3}
+                    placeholder="Tone, timing, brief alignment, vibe — anything that didn't quite land."
+                    value={declineNote || ''}
+                    onChange={(e) => onDeclineNoteChange(e.target.value)}
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                </div>
+              )}
+            </div>
           );
         })}
       </div>

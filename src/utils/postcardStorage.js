@@ -33,6 +33,9 @@ function makeKey(campaignId, creatorHandle) {
 const EMPTY = {
   postcard: null,
   reCollab: null,      // 'decline' | 'later' | 'favorite'
+  reCollabNote: '',    // private note shown to the Benable team only —
+                       // typically the "what didn't work" reason on a
+                       // 'decline'.
   rating: 0,
   rebooked: false,
   paidRights: {},
@@ -64,6 +67,12 @@ export function getReCollab(campaignId, creatorHandle) {
 }
 export function setReCollab(campaignId, creatorHandle, value /* 'decline'|'later'|'favorite'|null */) {
   patchCreatorState(campaignId, creatorHandle, { reCollab: value });
+}
+export function getReCollabNote(campaignId, creatorHandle) {
+  return getCreatorState(campaignId, creatorHandle).reCollabNote || '';
+}
+export function setReCollabNote(campaignId, creatorHandle, note) {
+  patchCreatorState(campaignId, creatorHandle, { reCollabNote: note });
 }
 export function isPositiveReCollab(value) {
   return value === 'later' || value === 'favorite';
