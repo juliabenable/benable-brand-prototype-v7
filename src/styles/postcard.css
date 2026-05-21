@@ -1452,10 +1452,9 @@
   color: #5a5a5a;
   font-size: 15px;
   line-height: 1.4;
-  /* Banner now sits inside the body content (above the table on
-     Dashboard, above the post grid on Content) — keep a generous
-     bottom margin so it doesn't crowd the content below. */
-  margin: 4px 0 16px;
+  /* Banner sits in the gap between the tab bar and the white .stage-top-card
+     panel, OUTSIDE the card chrome — balanced margin top + bottom. */
+  margin: 16px 0 16px;
   flex-wrap: wrap;
   transition: background .14s ease;
 }

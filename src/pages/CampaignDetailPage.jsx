@@ -100,18 +100,13 @@ export default function CampaignDetailPage() {
           <span class="wu-banner__cta-arrow" aria-hidden="true">→</span>
         </button>
       `;
-      // Place the banner just above the body content of the current
-      // tab (under the "Invited Creators" header on Dashboard, under
-      // the platform filter chips on Content). Falls back to under
-      // the tab bar if the expected wrapper isn't found.
-      let anchor = null;
-      if (tab === 'Dashboard') {
-        anchor = root.querySelector('.creator-management-table-wrap')
-              || root.querySelector('.creator-management-table');
-      } else if (tab === 'Content') {
-        anchor = root.querySelector('.content-post-grid')
-              || root.querySelector('.content-post-card')?.parentElement;
-      }
+      // Place the banner ABOVE the white content card on the current
+      // tab — outside the card chrome, between the tab bar and the
+      // body content. .stage-top-card is the wrapping element on both
+      // Dashboard (.creator-tracking-panel) and Content
+      // (.content-dashboard-panel). Falls back to right below the tab
+      // bar if the wrapper isn't found.
+      const anchor = root.querySelector('.stage-top-card');
       if (anchor && anchor.parentNode) {
         anchor.parentNode.insertBefore(banner, anchor);
       } else {
