@@ -100,11 +100,27 @@ export default function CampaignDetailPage() {
           <span class="wu-banner__cta-arrow" aria-hidden="true">→</span>
         </button>
       `;
-      const tabRow = bar.parentElement;
-      if (tabRow && tabRow.parentElement) {
-        tabRow.parentElement.insertBefore(banner, tabRow.nextSibling);
+      // Place the banner just above the body content of the current
+      // tab (under the "Invited Creators" header on Dashboard, under
+      // the platform filter chips on Content). Falls back to under
+      // the tab bar if the expected wrapper isn't found.
+      let anchor = null;
+      if (tab === 'Dashboard') {
+        anchor = root.querySelector('.creator-management-table-wrap')
+              || root.querySelector('.creator-management-table');
+      } else if (tab === 'Content') {
+        anchor = root.querySelector('.content-post-grid')
+              || root.querySelector('.content-post-card')?.parentElement;
+      }
+      if (anchor && anchor.parentNode) {
+        anchor.parentNode.insertBefore(banner, anchor);
       } else {
-        bar.parentNode.insertBefore(banner, bar.nextSibling);
+        const tabRow = bar.parentElement;
+        if (tabRow && tabRow.parentElement) {
+          tabRow.parentElement.insertBefore(banner, tabRow.nextSibling);
+        } else {
+          bar.parentNode.insertBefore(banner, bar.nextSibling);
+        }
       }
     }
 

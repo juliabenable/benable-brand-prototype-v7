@@ -1452,7 +1452,10 @@
   color: #5a5a5a;
   font-size: 15px;
   line-height: 1.4;
-  margin: 18px 0 4px;
+  /* Banner now sits inside the body content (above the table on
+     Dashboard, above the post grid on Content) — keep a generous
+     bottom margin so it doesn't crowd the content below. */
+  margin: 4px 0 16px;
   flex-wrap: wrap;
   transition: background .14s ease;
 }
@@ -1699,27 +1702,26 @@
 }
 
 /* Step header (consistent treatment for View / Thank / Re-collab).
-   Vertical rhythm: 22px top, 8px between h3 and subtitle, with the
-   step body picking up its own padding below. */
+   Typography matches the rest of the brand portal — Inter 700 for
+   the section heading, 14px gray for the subtitle. */
 .stp-step__hd {
-  padding: 22px 30px 0;
+  padding: 24px 30px 0;
   text-align: center;
 }
 .stp-step__hd h3 {
-  margin: 0 0 8px;
-  font-size: 22px;
-  font-weight: 600;
+  margin: 0 0 6px;
+  font-size: 20px;
+  font-weight: 700;
   color: #1a1a1a;
-  letter-spacing: -0.01em;
-  line-height: 1.2;
+  letter-spacing: -0.015em;
+  line-height: 1.3;
 }
 .stp-step__hd p {
-  margin: 0;
-  font-size: 13.5px;
+  margin: 0 auto;
+  font-size: 14px;
   color: #717171;
   line-height: 1.5;
   max-width: 600px;
-  margin-inline: auto;
 }
 
 /* Footer (back / actions) */
