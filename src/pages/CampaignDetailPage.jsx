@@ -84,7 +84,7 @@ export default function CampaignDetailPage() {
         (c) => !getPostcard(campaignId, c.creator.handle)
       ).length;
       const thankLink = unthankedCount > 0
-        ? `<span class="wu-banner__dot"></span>
+        ? `<span class="wu-banner__dot" aria-hidden="true"></span>
            <button type="button" class="wu-banner__link" data-banner-action="thank">${unthankedCount} creator${unthankedCount === 1 ? '' : 's'} to thank</button>`
         : '';
       const banner = document.createElement('div');
@@ -93,12 +93,12 @@ export default function CampaignDetailPage() {
         <span class="wu-banner__icon" aria-hidden="true">★</span>
         <span class="wu-banner__copy">
           <span class="wu-banner__lede">Your campaign is wrapped</span>
-          <span class="wu-banner__dot"></span>
-          <button type="button" class="wu-banner__link" data-banner-action="recap">See your recap</button>
           ${thankLink}
-          <span class="wu-banner__dot"></span>
-          <button type="button" class="wu-banner__link" data-banner-action="paid">Pick paid options</button>
         </span>
+        <button type="button" class="wu-banner__cta" data-banner-action="recap">
+          See your recap
+          <span class="wu-banner__cta-arrow" aria-hidden="true">→</span>
+        </button>
       `;
       const tabRow = bar.parentElement;
       if (tabRow && tabRow.parentElement) {
@@ -135,9 +135,9 @@ export default function CampaignDetailPage() {
         openThanksFromCard(card);
         return;
       }
-      // Wrap-up banner — any link in it switches to the Wrap-up tab.
-      const bannerLink = e.target.closest('.wu-banner, .wu-banner__link');
-      if (bannerLink) {
+      // Wrap-up banner — the CTA button OR the inline link both jump to Wrap-up.
+      const bannerHit = e.target.closest('.wu-banner__cta, .wu-banner__link');
+      if (bannerHit) {
         e.preventDefault(); e.stopPropagation();
         setTab('Wrapup');
         return;
