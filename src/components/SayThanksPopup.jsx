@@ -300,9 +300,10 @@ function StepView({ posts, idx, setIdx, post, creator, onNext }) {
         </article>
       </div>
 
-      {/* Post-list navigation — sits below the card, clearly labelled
-          "Post N of M" so it's never confused with the image-carousel
-          arrows that live ON the photo for multi-image posts. */}
+      {/* Post-list navigation — sits below the card. Lightweight,
+          chip-less: just two circle arrows and a "Post 1 / 2" counter.
+          The on-image arrows handle multi-image carousel posts when
+          present. */}
       {!single && (
         <div className="stp-view-nav" role="group" aria-label="Post navigation">
           <button
@@ -314,7 +315,7 @@ function StepView({ posts, idx, setIdx, post, creator, onNext }) {
           <div className="stp-view-nav__counter">
             <span className="stp-view-nav__counter-label">Post</span>
             <b>{idx + 1}</b>
-            <span>of</span>
+            <span className="stp-view-nav__counter-sep">/</span>
             <b>{posts.length}</b>
           </div>
           <button

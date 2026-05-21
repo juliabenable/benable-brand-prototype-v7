@@ -1699,10 +1699,10 @@
 }
 
 /* Step header (consistent treatment for View / Thank / Re-collab).
-   Generous vertical rhythm: 28px top, 8px between h3 and subtitle,
-   28px breathing room below before the step body starts. */
+   Vertical rhythm: 22px top, 8px between h3 and subtitle, with the
+   step body picking up its own padding below. */
 .stp-step__hd {
-  padding: 28px 30px 0;
+  padding: 22px 30px 0;
   text-align: center;
 }
 .stp-step__hd h3 {
@@ -1760,53 +1760,66 @@
 .stp-link:disabled { opacity: .5; cursor: not-allowed; }
 
 /* ---------- Step 1: View — Post-list navigation strip (sits BELOW
-   the card, labelled "Post N of M" so it's never confused with the
-   image-carousel arrows that live ON the photo for multi-image posts). */
+   the card). Lightweight, no chip background — clean horizontal arrows
+   + a "Post 1 / 2" counter. Image-carousel arrows on the photo cover
+   within-post navigation when posts are multi-image. */
 .stp-view-nav {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 18px;
   align-self: center;
-  margin: 14px auto 4px;
-  background: #f4f3f1;
-  border: 1px solid #ececea;
-  border-radius: 999px;
-  padding: 4px;
+  margin: 10px auto 0;
 }
 .stp-view-nav__arrow {
-  width: 30px; height: 30px;
+  width: 36px; height: 36px;
   border-radius: 50%;
-  border: 0;
+  border: 1px solid #ececea;
   background: #fff;
   color: #1a1a1a;
   font-size: 16px;
+  font-weight: 500;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
-  transition: transform .08s ease, background .14s ease;
+  transition: border-color .14s ease, background .14s ease, transform .08s ease;
 }
-.stp-view-nav__arrow:hover { transform: translateY(-1px); background: #fafaf8; }
+.stp-view-nav__arrow:hover {
+  background: #faf9f7;
+  border-color: #b1aca6;
+  transform: translateY(-1px);
+}
 .stp-view-nav__arrow:active { transform: translateY(0); }
 .stp-view-nav__counter {
   display: inline-flex;
   align-items: baseline;
   gap: 4px;
-  padding: 0 10px;
-  font-size: 13px;
+  font-size: 14px;
   color: #717171;
   font-weight: 500;
   line-height: 1;
+  min-width: 76px;
+  justify-content: center;
 }
-.stp-view-nav__counter b { color: #1a1a1a; font-weight: 700; font-size: 14px; }
+.stp-view-nav__counter b {
+  color: #1a1a1a;
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: -0.01em;
+}
 .stp-view-nav__counter-label {
   font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: #888;
-  margin-right: 2px;
+  margin-right: 6px;
+  align-self: center;
+}
+.stp-view-nav__counter-sep {
+  color: #b1aca6;
+  font-weight: 400;
+  margin: 0 2px;
 }
 
 /* ---------- Step 1: View — Instagram-DESKTOP card (one unified card,
@@ -1821,7 +1834,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px 30px 30px;
+  padding: 16px 30px 8px;
   min-height: 0;
   /* Stops the card from bleeding into the step header (or footer) when
      a long caption tries to push the side panel taller than the available
@@ -1836,12 +1849,11 @@
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
   overflow: hidden;
   max-width: 100%;
-  /* Card height matches the stage but never exceeds 540px. The media
-     pane uses height:100% to inherit, so the image stays at its native
-     ratio; the side panel inherits the same height and scrolls its
-     caption body internally when copy is long. */
+  /* Card fills the stage height up to 560px. With chrome trimmed
+     (step header, stage padding, nav strip), this gives back the
+     generous IG-card feel without overflowing the modal. */
   height: 100%;
-  max-height: 540px;
+  max-height: 560px;
   align-self: center;
 }
 /* Media pane — aspect-ratio is set inline based on the platform (9:16 for
