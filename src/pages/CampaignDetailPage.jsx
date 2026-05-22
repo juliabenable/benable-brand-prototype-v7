@@ -90,7 +90,7 @@ export default function CampaignDetailPage() {
       const banner = document.createElement('div');
       banner.className = 'wu-banner';
       banner.innerHTML = `
-        <span class="wu-banner__icon" aria-hidden="true">★</span>
+        <span class="wu-banner__icon" aria-hidden="true">♥</span>
         <span class="wu-banner__copy">
           <span class="wu-banner__lede">Your campaign is wrapped</span>
           ${thankLink}

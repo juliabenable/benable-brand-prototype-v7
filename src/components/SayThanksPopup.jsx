@@ -241,9 +241,11 @@ function StepView({ posts, idx, setIdx, post, creator, onNext }) {
   // Image arrows are reserved for *within-post* navigation (a single IG
   // post can be a multi-image carousel). For the demo, our posts are
   // single-image, so the on-image arrows stay hidden — post-list
-  // navigation lives in a dedicated strip above the card.
+  // navigation lives in side arrows flanking the card.
   const postImages = post.images && post.images.length > 1 ? post.images : [];
   const hasImageCarousel = postImages.length > 1;
+  const prevIdx = (idx - 1 + posts.length) % posts.length;
+  const nextIdx = (idx + 1) % posts.length;
   return (
     <div className="stp-step stp-step--view">
       <div className="stp-step__hd">
@@ -251,7 +253,18 @@ function StepView({ posts, idx, setIdx, post, creator, onNext }) {
         <p>Browse {posts.length === 1 ? 'the post' : `all ${posts.length} posts`} before you send a thank-you.</p>
       </div>
 
-      <div className="stp-view-stage">
+      <div className={`stp-view-stage ${single ? 'stp-view-stage--single' : ''}`}>
+        {!single && (
+          <button
+            type="button"
+            className="stp-view-nav stp-view-nav--prev"
+            onClick={() => setIdx(prevIdx)}
+            aria-label={`Previous post (${prevIdx + 1} of ${posts.length})`}
+          >
+            <span aria-hidden="true">‹</span>
+          </button>
+        )}
+
         <article className="stp-view-card">
           <div className="stp-view-card__media" style={{ aspectRatio: ratio }}>
             {post.thumbnailUrl ? (
@@ -298,28 +311,18 @@ function StepView({ posts, idx, setIdx, post, creator, onNext }) {
             )}
           </aside>
         </article>
-      </div>
 
-      {/* Post-list navigation — segmented control under the card.
-          Reads as a single integrated switch instead of three separate
-          elements (left arrow + counter + right arrow). On-image arrows
-          handle multi-image carousel posts when present. */}
-      {!single && (
-        <div className="stp-view-tabs" role="tablist" aria-label="Post navigation">
-          {posts.map((_, i) => (
-            <button
-              key={i}
-              type="button"
-              role="tab"
-              aria-selected={i === idx}
-              className={`stp-view-tab ${i === idx ? 'on' : ''}`}
-              onClick={() => setIdx(i)}
-            >
-              Post {i + 1}
-            </button>
-          ))}
-        </div>
-      )}
+        {!single && (
+          <button
+            type="button"
+            className="stp-view-nav stp-view-nav--next"
+            onClick={() => setIdx(nextIdx)}
+            aria-label={`Next post (${nextIdx + 1} of ${posts.length})`}
+          >
+            <span aria-hidden="true">›</span>
+          </button>
+        )}
+      </div>
 
       <footer className="stp-foot">
         <span className="stp-foot-spacer" />
@@ -475,12 +478,12 @@ function StepReCollab({ firstName, value, onPick, declineNote, onDeclineNoteChan
                 <div className="stp-rc-note" onClick={(e) => e.stopPropagation()}>
                   <label className="stp-rc-note__label">
                     <span className="stp-rc-note__label-text">Help us match better next time</span>
-                    <em>Notes are private — only the Benable team sees this, and we use them to sharpen the creators we suggest for your next campaign.</em>
+                    <em>Private — only the Benable team sees this.</em>
                   </label>
                   <textarea
                     className="stp-rc-note__field"
                     rows={2}
-                    placeholder="Tone, timing, brief alignment, vibe — anything we should know."
+                    placeholder="Tone, timing, vibe — anything we should know for next time."
                     value={declineNote || ''}
                     onChange={(e) => onDeclineNoteChange(e.target.value)}
                     onClick={(e) => e.stopPropagation()}

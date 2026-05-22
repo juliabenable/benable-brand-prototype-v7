@@ -5,6 +5,7 @@
  * Vintage: GREETINGS FROM <brand> hero strip + handwritten body + signoff,
  *          stamp + postmark + sparkle accents auto-filled.
  */
+import { useId } from 'react';
 
 export function PolaroidPostcard({
   thumbnailUrl, platform, brandName, message, signoff,
@@ -32,20 +33,12 @@ export function PolaroidPostcard({
             aria-label="Change signer photo"
             title="Click to change photo"
           >
-            <ScallopedSticker />
-            <span
-              className="pc-polaroid__sticker-photo"
-              style={signerAvatar ? { backgroundImage: `url(${signerAvatar})` } : undefined}
-            />
+            <WavyPhotoSticker avatarUrl={signerAvatar} />
             <span className="pc-polaroid__sticker-edit" aria-hidden="true">✎</span>
           </button>
         ) : (
           <span className="pc-polaroid__sticker" aria-hidden="true">
-            <ScallopedSticker />
-            <span
-              className="pc-polaroid__sticker-photo"
-              style={signerAvatar ? { backgroundImage: `url(${signerAvatar})` } : undefined}
-            />
+            <WavyPhotoSticker avatarUrl={signerAvatar} />
           </span>
         )
       )}
@@ -53,29 +46,49 @@ export function PolaroidPostcard({
   );
 }
 
-/* Scalloped "sticker" background — 12-petal flower around a center disc. */
-function ScallopedSticker() {
+/* Wavy photo sticker — the photo IS the frame, clipped to a gentle
+   8-bump wave (no white ring). Built from a central disc + 8 outer
+   bumps merged via a single <clipPath>, so the photo flows right
+   up to the wavy edge. */
+function WavyPhotoSticker({ avatarUrl }) {
+  const uid = useId().replace(/:/g, '');
+  const clipId = `wave-clip-${uid}`;
   return (
     <svg
-      className="pc-polaroid__sticker-bg"
+      className="pc-polaroid__sticker-svg"
       viewBox="0 0 100 100"
       aria-hidden="true"
     >
-      <g fill="#ffffff">
-        <circle cx="50" cy="50" r="40" />
-        <circle cx="50" cy="6"  r="10" />
-        <circle cx="72" cy="12" r="10" />
-        <circle cx="88" cy="28" r="10" />
-        <circle cx="94" cy="50" r="10" />
-        <circle cx="88" cy="72" r="10" />
-        <circle cx="72" cy="88" r="10" />
-        <circle cx="50" cy="94" r="10" />
-        <circle cx="28" cy="88" r="10" />
-        <circle cx="12" cy="72" r="10" />
-        <circle cx="6"  cy="50" r="10" />
-        <circle cx="12" cy="28" r="10" />
-        <circle cx="28" cy="12" r="10" />
-      </g>
+      <defs>
+        <clipPath id={clipId}>
+          {/* Central disc r=44 + 8 outer bumps r=8 at distance 46 →
+              merge into a continuous wavy outline with ~4.5u
+              amplitude. Subtle scallop, not a flower. */}
+          <circle cx="50" cy="50" r="44" />
+          <circle cx="50" cy="4"  r="8" />
+          <circle cx="82.5" cy="17.5" r="8" />
+          <circle cx="96" cy="50" r="8" />
+          <circle cx="82.5" cy="82.5" r="8" />
+          <circle cx="50" cy="96" r="8" />
+          <circle cx="17.5" cy="82.5" r="8" />
+          <circle cx="4" cy="50" r="8" />
+          <circle cx="17.5" cy="17.5" r="8" />
+        </clipPath>
+      </defs>
+      {/* Subtle pastel placeholder if no avatar yet. */}
+      <rect
+        x="0" y="0" width="100" height="100"
+        fill="#fff5ef"
+        clipPath={`url(#${clipId})`}
+      />
+      {avatarUrl && (
+        <image
+          href={avatarUrl}
+          x="0" y="0" width="100" height="100"
+          preserveAspectRatio="xMidYMid slice"
+          clipPath={`url(#${clipId})`}
+        />
+      )}
     </svg>
   );
 }
