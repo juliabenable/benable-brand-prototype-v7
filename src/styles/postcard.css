@@ -322,8 +322,8 @@
   position: absolute;
   right: -10px;
   bottom: -14px;
-  width: 84px;
-  height: 84px;
+  width: 67px;
+  height: 67px;
   padding: 0;
   border: 0;
   background: transparent;
@@ -1805,13 +1805,13 @@
 .stp-view-nav--next span { margin-left: 2px; }
 .stp-view-nav:hover {
   transform: scale(1.08);
-  color: #ff6b85;
-  border-color: #ffc4cf;
-  box-shadow: 0 6px 18px rgba(255, 107, 133, 0.18), 0 1px 3px rgba(0, 0, 0, 0.06);
+  color: #7a5cfa;
+  border-color: #c9bcfb;
+  box-shadow: 0 6px 18px rgba(122, 92, 250, 0.18), 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 .stp-view-nav:active { transform: scale(1.02); }
 .stp-view-nav:focus-visible {
-  outline: 2px solid #ff6b85;
+  outline: 2px solid #7a5cfa;
   outline-offset: 3px;
 }
 
@@ -1985,7 +1985,7 @@
   padding-bottom: 1px;
   display: inline-block;
 }
-.stp-view-card__link:hover { color: #ff7a8c; border-color: #ff7a8c; }
+.stp-view-card__link:hover { color: #7a5cfa; border-color: #7a5cfa; }
 
 /* ---------- Step 2: Thank (postcard + fields).
    28px breathing room between the step header and the polaroid +
@@ -2032,9 +2032,10 @@
 }
 .stp-field textarea,
 .stp-field input[type="text"] {
-  font-family: 'Caveat', 'Bradley Hand', cursive, system-ui;
-  font-size: 18px;
-  line-height: 1.3;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
   border: 1px solid #ebebeb;
   border-radius: 10px;
   padding: 12px 14px;
@@ -2044,12 +2045,13 @@
   outline: none;
   transition: border-color .12s, background .12s;
 }
-/* Private note + signature use the normal product font — handwriting
-   is reserved for the public postcard caption only. */
+/* All editor fields use the normal product font — handwriting is
+   reserved for the polaroid caption preview on the left only. */
 .stp-field--plain textarea,
 .stp-field--plain input[type="text"] {
   font-family: inherit;
   font-size: 14px;
+  font-weight: 400;
   line-height: 1.5;
 }
 .stp-field--sig input[type="text"] {

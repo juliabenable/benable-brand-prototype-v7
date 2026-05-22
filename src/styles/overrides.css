@@ -119,3 +119,12 @@ button { font-family: inherit; }
 .dashboard-body > div[data-shell-slot] {
   display: contents;
 }
+
+/* Collision fix: a later production rule
+   `.compose-card, .chart-card, .panel-card, .table-card { padding: 20px }`
+   (from the alerts/intelligence surface set) also matches the campaigns
+   list `.table-card`, which originally had NO padding. That 20px insets
+   the table from the card border and breaks the edge-to-edge header band.
+   Scope the campaigns table card back to zero padding (the table fills
+   the card; the rounded corners + overflow:hidden clip it). */
+.campaigns-section .table-card { padding: 0; }
